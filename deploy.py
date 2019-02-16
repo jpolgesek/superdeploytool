@@ -7,6 +7,7 @@ import shutil
 import hashlib
 import htmlmin
 import argparse
+import subprocess
 import csscompressor
 from pathlib import Path
 from jsmin import jsmin
@@ -38,6 +39,8 @@ parser.add_argument('--password')
 parser.add_argument('--uploader-rootdir-manifest')
 parser.add_argument('--uploader-rootdir-app')
 parser.add_argument('--path')
+parser.add_argument('--exec-before')
+parser.add_argument('--exec-after')
 parser.add_argument("app_name")
 parser.add_argument("app_env")
 
@@ -158,6 +161,12 @@ print(version)
 if args.data_only:
 	cfg.static_files = ["data.json", "index.html", "update.html"]
 	cfg.static_dirs = []
+
+
+if args.exec_before != None:
+	utils.step("Exec before", 0.5)
+	process = subprocess.Popen(args.exec_before, shell=True, stdout=subprocess.PIPE)
+	process.wait()
 
 
 # --- STEP 1
@@ -405,3 +414,10 @@ if True:
 if cfg.remove_output_after_build and os.path.exists(cfg.output_dir):
 	shutil.rmtree(cfg.output_dir)
 	utils.step("Removed build directory - {}".format(cfg.output_dir), 12)
+
+
+
+if args.exec_after != None:
+	utils.step("Exec after", 12)
+	process = subprocess.Popen(args.exec_after, shell=True, stdout=subprocess.PIPE)
+	process.wait()
