@@ -1,0 +1,23 @@
+{
+	"envs": {
+		"example-dev": {
+			"dev": true,
+			"http_rootdir_app": "/",
+			"http_rootdir_manifest": "/",
+			"hostname": "example.com",
+			"uploader": "scp",
+			"scp": {
+				"rootdir_manifest": "/var/www/html/",
+				"rootdir_app": "/var/www/html/",
+				"username": "test",
+				"password": "test"
+			}
+		}
+	},
+	"targets": {
+		"zastepstwa": {
+			"web-paths": ["/opt/files"],
+			"envs": ["example-dev"]
+		}
+	}
+}

@@ -1,0 +1,5 @@
+requests 
+htmlmin 
+jsmin 
+csscompressor
+pysftp
