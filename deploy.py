@@ -39,6 +39,7 @@ parser.add_argument('--password')
 parser.add_argument('--uploader-rootdir-manifest')
 parser.add_argument('--uploader-rootdir-app')
 parser.add_argument('--path')
+parser.add_argument('--upload-only', action='store_true')
 parser.add_argument('--exec-before')
 parser.add_argument('--exec-after')
 parser.add_argument("app_name")
@@ -80,6 +81,15 @@ if args.path == None:
 			exit(1)
 		
 		args.path = possible_path
+
+elif args.upload_only:
+	print("TODO2")
+	args.app_env = args.app_name + "-" + args.app_env
+	env = user_data["envs"][args.app_env]
+	app = {
+			"web-paths": [args.path],
+			"envs": [""]
+	}
 
 else:
 	print("TODO")
@@ -207,6 +217,51 @@ for path in cfg.static_files:
 
 
 
+
+if cfg.upload_only or args.upload_only:
+	if target["uploader"] == "ftp":
+		import modules.upload_ftp
+		uploader = modules.upload_ftp.Uploader(target["hostname"])
+		uploader.login(
+			target["ftp"]["username"], 
+			target["ftp"]["password"]
+			)
+	elif target["uploader"] == "scp":
+		import modules.upload_scp
+		uploader = modules.upload_scp.Uploader(target["hostname"])
+		uploader.login(
+			target["scp"]["username"], 
+			target["scp"]["password"]
+			)
+	elif target["uploader"] == "local":
+		import modules.upload_local
+		uploader = modules.upload_local.Uploader(target["hostname"])
+	else:
+		print("No such uploader: {}".format(target["uploader"]))
+		exit(1)
+
+	#FIXME
+	target["rootdir_app"] = target[target["uploader"]]["rootdir_app"]
+
+	uploader.connect()
+
+	utils.step("Upload Super Clever Zastepstwa build {} to {}".format(version, target["hostname"]), 9)
+	uploader.chdir(target["rootdir_app"])
+	uploader.upload_dir(cfg.output_dir, target["rootdir_app"])
+
+	utils.step("TODO: Notify clients about new version", 11)
+
+	if cfg.remove_output_after_build and os.path.exists(cfg.output_dir):
+		shutil.rmtree(cfg.output_dir)
+		utils.step("Removed build directory - {}".format(cfg.output_dir), 12)
+	
+	if args.exec_after != None:
+		utils.step("Exec after", 12)
+		process = subprocess.Popen(args.exec_after, shell=True, stdout=subprocess.PIPE)
+		process.wait()
+
+	
+	exit(0)
 
 
 

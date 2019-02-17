@@ -6,6 +6,19 @@ class DeployConfig:
 		self.relative = False
 		self.path = path
 		self.source_dir = path
+		self.output_dir = "output"
+		self.always_upload_static = True
+		self.remove_output_after_build = True
+		self.static_dirs = []
+		self.static_files = []
+
+		if "type" in data and data["type"] == "upload_only":
+			self.upload_only = True
+			self.static_files = data["files"]
+			return
+		else:
+			self.upload_only = False
+		
 		self.source_basedir = data["source_basedir"]
 
 		self.remove_output_after_build = data["remove_output_after_build"]
