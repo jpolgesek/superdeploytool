@@ -139,12 +139,12 @@ target = env
 
 # And here we go
 
-version = ""
+version = "SDT-"
 
 try:
-	version = os.environ['GITLAB_TAG'].replace(".", "")
+	version += os.environ['GITLAB_TAG'].replace(".", "")
 except:
-	version = "400"
+	version += "400"
 
 try:
 	version += "."
