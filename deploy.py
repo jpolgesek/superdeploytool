@@ -128,7 +128,7 @@ else:
 
 
 #wczytaj config z .deploytool.json
-with open(Path(args.path + "/.deploytool.json"), "r", encoding = "UTF-8") as f:
+with open(str(Path(args.path + "/.deploytool.json")), "r", encoding = "UTF-8") as f:
 	app_config = json.load(f)
 
 cfg = deployconfig.DeployConfig(Path(args.path), app_config)
@@ -197,7 +197,7 @@ utils.substep("Created build assets subdirectory ")
 '''
 
 
-
+cfg.source_dir = str(cfg.source_dir)
 
 # --- STEP 2
 # --- Copy static files to build directory
@@ -205,6 +205,7 @@ utils.step("Copy static files to build directory", 2)
 
 if args.upload_static_assets or cfg.always_upload_static:
 	for path in cfg.static_dirs:
+		path = str(path)
 		utils.copy(os.path.join(cfg.source_dir, path), os.path.join(cfg.output_dir, path))
 		utils.substep("Copied dir - {}".format(path))
 else:
@@ -212,6 +213,7 @@ else:
 
 
 for path in cfg.static_files:
+	path = str(path)
 	shutil.copyfile(os.path.join(cfg.source_dir, path), os.path.join(cfg.output_dir, path))
 	utils.substep("Copied file - {}".format(path))
 

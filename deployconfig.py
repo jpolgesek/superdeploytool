@@ -5,7 +5,7 @@ class DeployConfig:
 	def __init__(self, path, data):
 		self.relative = False
 		self.path = path
-		self.source_dir = path
+		self.source_dir = str(path)
 		self.output_dir = "output"
 		self.always_upload_static = True
 		self.remove_output_after_build = True
