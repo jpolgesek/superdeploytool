@@ -15,6 +15,7 @@ from html.parser import HTMLParser
 
 import deployconfig
 from modules import utils
+from modules import versioning
 
 user_data = None
 
@@ -139,34 +140,8 @@ target = env
 
 # And here we go
 
-version = "SDT-"
-
-try:
-	version += os.environ['GITLAB_TAG'].replace(".", "")
-except:
-	version += "400"
-
-try:
-	version += "."
-	version += os.environ['CI_COMMIT_SHA'][:8]
-except:
-	version += "M"
-
-try:
-	version += "."
-	version += os.environ['CI_JOB_ID'][:8]
-except:
-	version += str(int(time.time()))[-8:]
-
-
-if target['dev']:
-	version += ".DEV"
-
-safe_version = version.replace(".", "-")
-		
-print(version)
-
-
+version = versioning.get_version_string(dev = target['dev'])
+safe_version = version
 
 if args.data_only:
 	cfg.static_files = ["data.json", "index.html", "update.html"]
