@@ -35,8 +35,6 @@ class DeployConfig:
 		self.relative = True
 		self.static_dirs[:] = map(self._gen_path, self.static_dirs)
 		self.static_files[:] = map(self._gen_path, self.static_files)
-		self.relative = False
-
 		self.hash_this[:] = map(self._gen_path, self.hash_this)
 			
 		self.variables = data["variables"]
