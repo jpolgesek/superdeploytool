@@ -23,10 +23,9 @@ class Task:
 			manifest = manifest.replace(': "/', ': "{}/'.format(target["http_rootdir_app"]))
 				
 		if target["dev"]: 
-			manifest = manifest.replace('launcher-icon-4x.png', 'launcher-icon-test.png')
-			manifest = manifest.replace('launcher-icon-512.png', 'launcher-icon-test.png')
-			manifest = manifest.replace('Plan Lekcji', '[TEST] Plan Lekcji')
-			manifest = manifest.replace('Super Clever Plan', '[TEST] Super Clever Plan')
+			manifest = manifest.replace('launcher-icon-', 'launcher-icon-test-')
+			manifest = manifest.replace('Plan Lekcji', 'Test Plan')
+			manifest = manifest.replace('Super Clever Plan', 'Super Clever Test Plan')
 
 		with open(os.path.join(cfg.output_dir, "manifest.json"), 'w') as f:			
 			f.write(manifest)
