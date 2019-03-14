@@ -14,13 +14,13 @@ class Task:
 		cfg = self.cfg
 
 		try :
-			a = open(str(cfg.source_html).replace("index", "ie_index"), "r")
+			a = open(os.path.join(cfg.output_dir, str(cfg.source_html).replace("index", "ie_index")), "r")
 			a.close()
 			self.data['ie_build'] = True
-		except:		
+		except:	
 			self.data['ie_build'] = None
 
 		cfg.source_css = str(cfg.source_css).replace("css", "ie_css").replace(".ie_css", ".css")
 		cfg.source_html = str(cfg.source_html).replace("index", "ie_index")
-
+		
 		return True
