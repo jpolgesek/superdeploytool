@@ -1,12 +1,8 @@
 #coding: utf-8
 import re
-import os
 import json
-import time
-import shutil
 import hashlib
 import argparse
-import subprocess
 from pathlib import Path
 
 import deployconfig
@@ -72,14 +68,14 @@ if args.path == None:
 		path = Path(possible_path)
 		if not path.is_dir():
 			print("no such file or directory")
-			exit(1)
 		
 		path = Path(possible_path + "/.deploytool.json")
 		if not path.exists():
 			print("No deploytool config. EXIT?")
-			exit(1)
 		
 		args.path = possible_path
+	
+	print(args.path)
 
 elif args.upload_only:
 	print("[Upload only mode]")
@@ -152,27 +148,53 @@ data = {}
 cfg.exec_before = args.exec_before
 cfg.source_dir = str(cfg.source_dir)
 cfg.always_upload_static |= args.upload_static_assets
-if args.upload_only:
-	cfg.upload_only = True
 cfg.target = target
 cfg.exec_after = args.exec_after
 
+cfg.static_files.append("ie_index.html")
 
-tasks_list = [
-	"exec_before",
-	"prepare_build_directory",
-	"copy_static",
-	"minify_css",
-	"minify_js",
-	"write_minified_files",
-	"prepare_manifest",
-	"service_worker_hash",
-	"upload",
-	"cleanup",
-	"exec_after"
-]
+if args.upload_only or args.data_only:
+	cfg.upload_only = True
+	tasks_list = [
+		"exec_before",
+		"prepare_build_directory",
+		"copy_static",
+		"upload",
+		"cleanup",
+		"exec_after"
+	]
+else:
+	tasks_list = [
+		"exec_before",
+		"prepare_build_directory",
+		"copy_static",
+		"minify_css",
+		"minify_js",
+		"write_minified_files",
+		"check_for_ie",
+		"$data['ie_build'] != None$minify_css",
+		"$data['ie_build'] != None$minify_js",
+		"$data['ie_build'] != None$write_minified_files",
+		"prepare_manifest",
+		"service_worker_hash",
+		"upload",
+		"cleanup",
+		"exec_after"
+	]
 
 for current_task in tasks_list:
-	print("---Running task: {}---".format(current_task))
-	task = getattr(tasks, current_task).Task(cfg, utils, data)
-	task.run()
+	run_task = True
+	
+	if current_task.find("$") != -1:
+		condition = current_task.split("$")[1]
+		current_task = current_task.split("$")[2]
+		if condition:
+			print("Condition {} met for task {}".format(condition, current_task))
+		else:
+			print("Condition {} not met for task {}".format(condition, current_task))
+			run_task = False
+	
+	if run_task:
+		print("---Running task: {}---".format(current_task))
+		task = getattr(tasks, current_task).Task(cfg, utils, data)
+		task.run()

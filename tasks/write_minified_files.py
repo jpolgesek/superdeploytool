@@ -19,8 +19,13 @@ class Task:
 
 		utils.step("Write minified files to build directory", 5)
 
-		js_path = Path("/".join([cfg.output_dir, "assets", "js", "c_app.js"]))
-		css_path = Path("/".join([cfg.output_dir, "assets", "css", "c_style.css"]))
+		if 'ie_build' in self.data and self.data['ie_build'] != None:
+			js_path = Path("/".join([cfg.output_dir, "assets", "ie_js", "c_app.js"]))
+			css_path = Path("/".join([cfg.output_dir, "assets", "ie_css", "c_style.css"]))
+		else:
+			js_path = Path("/".join([cfg.output_dir, "assets", "js", "c_app.js"]))
+			css_path = Path("/".join([cfg.output_dir, "assets", "css", "c_style.css"]))
+		
 		js_path.parent.mkdir(parents=True, exist_ok=True)
 		css_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -34,8 +39,14 @@ class Task:
 			utils.substep("Saved compiled CSS to {}".format(css_path))
 
 		with open(os.path.join(cfg.output_dir, cfg.source_html), "r+", encoding="UTF-8") as f:
-			replaced = re.sub(r"(<!-- %compile_css_start%-->)([\s\S]*)(<!-- %compile_css_end%-->)", "<link rel='stylesheet' href='assets/css/c_style.css?ver={}'>".format(cfg.version), f.read())
-			replaced = re.sub(r"(<!-- %compile_js_start%-->)([\s\S]*)(<!-- %compile_js_end%-->)", "<script src='assets/js/c_app.js?ver={}'></script>".format(cfg.version), replaced)
+				
+			if 'ie_build' in self.data and self.data['ie_build'] != None:
+				replaced = re.sub(r"(<!-- %compile_css_start%-->)([\s\S]*)(<!-- %compile_css_end%-->)", "<link rel='stylesheet' href='assets/ie_css/c_style.css?ver={}'>".format(cfg.version), f.read())
+				replaced = re.sub(r"(<!-- %compile_js_start%-->)([\s\S]*)(<!-- %compile_js_end%-->)", "<script src='assets/ie_js/c_app.js?ver={}'></script>".format(cfg.version), replaced)
+			else:
+				replaced = re.sub(r"(<!-- %compile_css_start%-->)([\s\S]*)(<!-- %compile_css_end%-->)", "<link rel='stylesheet' href='assets/css/c_style.css?ver={}'>".format(cfg.version), f.read())
+				replaced = re.sub(r"(<!-- %compile_js_start%-->)([\s\S]*)(<!-- %compile_js_end%-->)", "<script src='assets/js/c_app.js?ver={}'></script>".format(cfg.version), replaced)
+			
 			if not target["dev"]: 
 				replaced = replaced.replace("<!--%DEV_ONLY_START%-->", "<!--%DEV_ONLY_START% ")
 				replaced = replaced.replace("<!--%DEV_ONLY_STOP%-->", " %DEV_ONLY_START% ")

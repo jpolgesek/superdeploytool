@@ -11,3 +11,4 @@ import tasks.prepare_manifest
 import tasks.service_worker_hash
 import tasks.write_minified_files
 import tasks.prepare_build_directory
+import tasks.check_for_ie
