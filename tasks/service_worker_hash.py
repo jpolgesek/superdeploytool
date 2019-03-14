@@ -27,7 +27,7 @@ class Task:
 
 		with open(os.path.join(cfg.output_dir, "sw.js"), "r", encoding="UTF-8") as f:
 			content = f.read()
-			# content = content.replace("var ENABLE_CACHE = false;", "var ENABLE_CACHE = true;")
+			content = content.replace("var ENABLE_CACHE = false;", "var ENABLE_CACHE = true;")
 			content = content.replace('%compiler_checksums%', checksums + cfg.version)
 			content = content.replace('%build%', cfg.version)
 
