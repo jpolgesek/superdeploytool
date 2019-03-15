@@ -1,6 +1,7 @@
 # Custom
 .user.json
 temp.md
+targets.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
