@@ -3,8 +3,11 @@ import shutil
 import errno
 
 
-def step(text = "", no = 0, max_no = 12):
-	print("[{:3d}%] {}".format(int((no / max_no) * 100), text))
+def step(text = "", no = 0, max_no = 12, percentage = None):
+	if percentage != None:
+		print("[{:3d}%] {}".format(percentage, text))
+	else:
+		print("[{:3d}%] {}".format(int((no / max_no) * 100), text))
 
 def substep(text = ""):
 	print("       - {}".format(text))

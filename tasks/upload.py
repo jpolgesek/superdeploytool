@@ -41,12 +41,12 @@ class Task:
 
 			uploader.connect()
 
-			utils.step("Show update screen on {}".format(target["hostname"]), 7)
+			utils.step("Show update screen on {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_file(os.path.join(cfg.output_dir, "update.html"), "index.html")
 
 			
-			utils.step("Upload manifest to {}".format(target["hostname"]), 8)
+			utils.step("Upload manifest to {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
 			uploader.connect()
 			uploader.chdir(target["rootdir_manifest"])
 			uploader.upload_file(os.path.join(cfg.output_dir, "manifest.json"), "manifest.json")
@@ -56,11 +56,11 @@ class Task:
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_dir(cfg.output_dir, target["rootdir_app"])
 
-			utils.step("Hide update screen on {}".format(target["hostname"]), 10)
+			utils.step("Hide update screen on {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_file(os.path.join(cfg.output_dir, "index.html"), "index.html")
 
-			utils.step("TODO: Notify clients about new version", 11)
+			utils.step("TODO: Notify clients about new version", percentage = self.data["current_step_percentage"])
 
 		return True
 

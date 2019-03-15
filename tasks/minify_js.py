@@ -18,7 +18,7 @@ class Task:
 		utils = self.utils
 		cfg = self.cfg
 
-		utils.step("Minify JavaScript files", 4)
+		utils.step("Minify JavaScript files", percentage = self.data["current_step_percentage"])
 		# TODO: separate build for IE
 
 		class JSFinder(HTMLParser):

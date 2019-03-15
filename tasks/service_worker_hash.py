@@ -15,7 +15,7 @@ class Task:
 		utils = self.utils
 		cfg = self.cfg
 
-		utils.step("Generate unique build id for cache bust", 6)
+		utils.step("Generate unique build id for cache bust", percentage = self.data["current_step_percentage"])
 
 		checksums = ""
 		for path in cfg.hash_this:

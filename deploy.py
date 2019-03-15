@@ -182,16 +182,20 @@ else:
 		"exec_after"
 	]
 
-for current_task in tasks_list:
+data["total_step_count"] = len(tasks_list)
+
+for i, current_task in enumerate(tasks_list):
 	run_task = True
+	data["current_step_id"] = i
+	data["current_step_percentage"] = int((data["current_step_id"] / data["total_step_count"]) * 100)
 	
 	if current_task.find("$") != -1:
 		condition = current_task.split("$")[1]
 		current_task = current_task.split("$")[2]
 		if condition:
-			print("Condition {} met for task {}".format(condition, current_task))
+			print("Condition [{}] met for task [{}]".format(condition, current_task))
 		else:
-			print("Condition {} not met for task {}".format(condition, current_task))
+			print("Condition [{}] not met for task [{}]".format(condition, current_task))
 			run_task = False
 	
 	if run_task:

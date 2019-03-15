@@ -15,7 +15,7 @@ class Task:
 		cfg = self.cfg
 
 		if cfg.exec_after != None:
-			utils.step("Exec after", 12)
+			utils.step("Exec after", percentage = self.data["current_step_percentage"])
 			process = subprocess.Popen(cfg.exec_after, shell=True, stdout=subprocess.PIPE)
 			process.wait()
 

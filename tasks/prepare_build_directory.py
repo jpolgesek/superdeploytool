@@ -10,7 +10,7 @@ class Task:
 		return None
 	
 	def run(self):
-		self.utils.step("Cleanup build directory", 1)
+		self.utils.step("Cleanup build directory", percentage = self.data["current_step_percentage"])
 
 		if os.path.exists(self.cfg.output_dir): 
 			shutil.rmtree(self.cfg.output_dir)
