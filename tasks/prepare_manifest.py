@@ -16,8 +16,12 @@ class Task:
 		utils = self.utils
 		cfg = self.cfg
 
-		with open(os.path.join(cfg.output_dir, "manifest.json"), 'r') as f:
-			manifest = f.read()
+		try:
+			with open(os.path.join(cfg.output_dir, "manifest.json"), 'r') as f:
+				manifest = f.read()
+		except:
+			return False
+
 
 		if target["http_rootdir_app"] != "/": 
 			manifest = manifest.replace(': "/', ': "{}/'.format(target["http_rootdir_app"]))

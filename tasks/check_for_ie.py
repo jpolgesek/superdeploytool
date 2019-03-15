@@ -19,6 +19,7 @@ class Task:
 			self.data['ie_build'] = True
 		except:	
 			self.data['ie_build'] = None
+			return None
 
 		cfg.source_css = str(cfg.source_css).replace("css", "ie_css").replace(".ie_css", ".css")
 		cfg.source_html = str(cfg.source_html).replace("index", "ie_index")

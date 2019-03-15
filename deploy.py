@@ -1,4 +1,5 @@
 #coding: utf-8
+import os
 import re
 import json
 import hashlib
@@ -8,15 +9,6 @@ from pathlib import Path
 import deployconfig
 from modules import utils
 from modules import versioning
-
-user_data = None
-
-try:
-	with open(".user.json", "r", encoding = "UTF-8") as f:
-		user_data = json.load(f)
-	print("Loaded .user.json succesfully")
-except:
-	print("Failed to load .user.json")
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--upload-static-assets', action='store_true')
@@ -35,31 +27,39 @@ parser.add_argument('--path')
 parser.add_argument('--upload-only', action='store_true')
 parser.add_argument('--exec-before')
 parser.add_argument('--exec-after')
+parser.add_argument('--use-colors', action='store_true')
 parser.add_argument("app_name")
 parser.add_argument("app_env")
 
 args = parser.parse_args()
 
+if args.use_colors:
+	utils.USE_COLORS = True
+
+
+user_data = None
+
+try:
+	with open(".user.json", "r", encoding = "UTF-8") as f:
+		user_data = json.load(f)
+	utils.log("Loaded .user.json", level = utils.INFO)
+except:
+	utils.log("Loaded .user.json", level = utils.INFO)
+
+
 if args.path == None:
 	args.app_env = args.app_name + "-" + args.app_env
 
 	if user_data == None:
-		print("No path and no .user.json, exiting")
-		exit(1)
+		utils.log("No path and no .user.json, exiting", level = utils.FATAL)
 
 	elif args.app_name not in user_data["targets"]:
-		print("No such profile {}".format(args.app_name))
-		exit(1)
-
-	elif args.app_name not in user_data["targets"]:
-		print("No such profile {}".format(args.app_name))
-		exit(1)
-
+		utils.log("No such profile {}".format(args.app_name), level = utils.FATAL)
+	
 	elif args.app_env not in user_data["targets"][args.app_name]["envs"] or args.app_env not in user_data["envs"]:
-		print("No such env {}".format(args.app_env))
-		exit(1)
+		utils.log("No such env {}".format(args.app_env), level = utils.FATAL)
 
-	print("[Using .user.json]")
+	utils.log("Using .user.json", level = utils.INFO)
 	
 	app = user_data["targets"][args.app_name]
 	env = user_data["envs"][args.app_env]
@@ -67,18 +67,17 @@ if args.path == None:
 	for possible_path in app["web-paths"]:
 		path = Path(possible_path)
 		if not path.is_dir():
-			print("no such file or directory")
+			utils.log("No such file or directory: {}".format(str(path)), level = utils.INFO)
 		
 		path = Path(possible_path + "/.deploytool.json")
 		if not path.exists():
-			print("No deploytool config. EXIT?")
+			utils.log("No deploytool config at: {}".format(str(path)), level = utils.INFO)
 		
 		args.path = possible_path
 	
-	print(args.path)
-
+	
 elif args.upload_only:
-	print("[Upload only mode]")
+	utils.log("Upload only mode", level = utils.WARNING)
 	
 	args.app_env = args.app_name + "-" + args.app_env
 	env = user_data["envs"][args.app_env]
@@ -89,10 +88,9 @@ elif args.upload_only:
 
 else:
 	if None in (args.uploader, args.http_rootdir_app, args.hostname, args.uploader, args.uploader_rootdir_app):
-		print("Not enough args :(")
-		exit(1)
+		utils.log("Not enough arguments", level = utils.FATAL)
 	
-	print("[Using provided path]")
+	utils.log("Using provided path", level = utils.INFO)
 
 	if args.http_rootdir_manifest == None: 
 		args.http_rootdir_manifest = args.http_rootdir_app
@@ -126,9 +124,9 @@ try:
 		app_config = json.load(f)
 	cfg = deployconfig.DeployConfig(Path(args.path), app_config)
 	target = env
-	print("Loaded .deploytool.json succesfully")
+	utils.log("Loaded .deploytool.json succesfully", level = utils.INFO)
 except:
-	print("Failed to load .deploytool.json")
+	utils.log("Failed to load .deploytool.json", level = utils.INFO)
 
 
 import tasks
@@ -151,7 +149,12 @@ cfg.always_upload_static |= args.upload_static_assets
 cfg.target = target
 cfg.exec_after = args.exec_after
 
-cfg.static_files.append("ie_index.html")
+try :
+	a = open(os.path.join(cfg.output_dir, str(cfg.source_html).replace("index", "ie_index")), "r")
+	a.close()
+	cfg.static_files.append("ie_index.html")
+except:	
+	pass
 
 if args.upload_only or args.data_only:
 	cfg.upload_only = True
@@ -192,13 +195,13 @@ for i, current_task in enumerate(tasks_list):
 	if current_task.find("$") != -1:
 		condition = current_task.split("$")[1]
 		current_task = current_task.split("$")[2]
-		if condition:
-			print("Condition [{}] met for task [{}]".format(condition, current_task))
+		if eval(condition):
+			utils.log("Condition [{}] met for task [{}]".format(condition, current_task), level = utils.INFO)
 		else:
-			print("Condition [{}] not met for task [{}]".format(condition, current_task))
+			utils.log("Condition [{}] not met for task [{}]".format(condition, current_task), level = utils.INFO)
 			run_task = False
 	
 	if run_task:
-		print("---Running task: {}---".format(current_task))
+		utils.log("Running task: {}".format(current_task), level = utils.INFO)
 		task = getattr(tasks, current_task).Task(cfg, utils, data)
 		task.run()

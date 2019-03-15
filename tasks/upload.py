@@ -45,14 +45,15 @@ class Task:
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_file(os.path.join(cfg.output_dir, "update.html"), "index.html")
 
-			
-			utils.step("Upload manifest to {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
-			uploader.connect()
-			uploader.chdir(target["rootdir_manifest"])
-			uploader.upload_file(os.path.join(cfg.output_dir, "manifest.json"), "manifest.json")
-			
+			try:
+				utils.step("Upload manifest to {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
+				uploader.connect()
+				uploader.chdir(target["rootdir_manifest"])
+				uploader.upload_file(os.path.join(cfg.output_dir, "manifest.json"), "manifest.json")
+			except:
+				utils.step("Manifest upload failed", percentage = self.data["current_step_percentage"])
 
-			utils.step("Upload Super Clever Zastepstwa build {} to {}".format(cfg.version, target["hostname"]), 9)
+			utils.step("Upload app build {} to {}".format(cfg.version, target["hostname"]), percentage = self.data["current_step_percentage"])
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_dir(cfg.output_dir, target["rootdir_app"])
 
