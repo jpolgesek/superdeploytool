@@ -170,17 +170,24 @@ for i, current_task in enumerate(tasks_list):
 	run_task = True
 	data["current_step_id"] = i
 	data["current_step_percentage"] = int((data["current_step_id"] / data["total_step_count"]) * 100)
-	
+	utils.current_percentage = data["current_step_percentage"] 
+
 	if current_task.find("$") != -1:
 		condition = current_task.split("$")[1]
 		current_task = current_task.split("$")[2]
 		if eval(condition):
-			utils.log("Condition [{}] met for task [{}]".format(condition, current_task), level = utils.INFO)
+			utils.log("Condition '{}' met for task {}".format(condition, current_task), level = utils.INFO)
 		else:
-			utils.log("Condition [{}] not met for task [{}]".format(condition, current_task), level = utils.INFO)
+			utils.log("Condition '{}' not met for task {}".format(condition, current_task), level = utils.INFO)
 			run_task = False
 	
 	if run_task:
-		utils.log("Running task: {}".format(current_task), level = utils.INFO)
+		utils.log("Task: {}".format(current_task), level = utils.INFO)
+
 		task = getattr(tasks, current_task).Task(cfg, utils, data)
-		task.run()
+		
+		try:
+			task.run()
+		except Exception as e:
+			utils.log("Task has failed: {}.".format(str(e)), level = utils.FATAL)
+		

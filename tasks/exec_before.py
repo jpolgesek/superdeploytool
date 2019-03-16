@@ -15,7 +15,7 @@ class Task:
 		cfg = self.cfg
 
 		if cfg.exec_before != None:
-			utils.step("Exec before", percentage = self.data["current_step_percentage"])
+			utils.log("Exec before", level=utils.INFO)
 			process = subprocess.Popen(cfg.exec_before, shell=True, stdout=subprocess.PIPE)
 			process.wait()
 

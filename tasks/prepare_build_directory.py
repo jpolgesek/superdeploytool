@@ -10,12 +10,16 @@ class Task:
 		return None
 	
 	def run(self):
-		self.utils.step("Cleanup build directory", percentage = self.data["current_step_percentage"])
+		target = self.cfg.target
+		utils = self.utils
+		cfg = self.cfg
 
-		if os.path.exists(self.cfg.output_dir): 
-			shutil.rmtree(self.cfg.output_dir)
-			self.utils.substep("Removed build directory - {}".format(self.cfg.output_dir))
+		utils.log("Cleanup build directory", level=utils.INFO)
+
+		if os.path.exists(cfg.output_dir): 
+			shutil.rmtree(cfg.output_dir)
+			utils.substep("Removed build directory - {}".format(cfg.output_dir))
 			
 		os.makedirs(self.cfg.output_dir)
-		self.utils.substep("Created build directory - {}".format(self.cfg.output_dir))
+		utils.substep("Created build directory - {}".format(cfg.output_dir))
 		return True

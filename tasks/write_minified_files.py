@@ -17,7 +17,7 @@ class Task:
 		utils = self.utils
 		cfg = self.cfg
 
-		utils.step("Write minified files to build directory", percentage = self.data["current_step_percentage"])
+		utils.log("Write minified files to build directory", level=utils.INFO)
 
 		if 'ie_build' in self.data and self.data['ie_build'] != None:
 			js_path = Path("/".join([cfg.output_dir, "assets", "ie_js", "c_app.js"]))

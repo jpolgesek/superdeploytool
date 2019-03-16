@@ -15,6 +15,9 @@ USE_COLORS = False
 SHOW_LINES = True
 SHOW_TIME = False
 SHOW_LEVEL = False
+SHOW_PERCENTAGE = True
+
+current_percentage = 0
 class bcolors:
 	HEADER = '\033[95m'
 	OKBLUE = '\033[94m'
@@ -33,14 +36,16 @@ def log(text = "Default text", level = None):
 
 	#if filename[0] == ".":
 	#	filename = filename[2:]
-	
+
+	output = ""
+
 	if SHOW_LINES:
-		output = "[{:>16}] {}".format(
-			"{}:{}".format(filename, line_number),
-			text
-		)
-	else:
-		output = text
+		output += "{:>30} |".format("{}:{}".format(filename, line_number))
+	
+	if SHOW_PERCENTAGE:
+		output += "{:3d}% | ".format(current_percentage)
+	
+	output += text
 
 	if USE_COLORS:
 		if level == FATAL:
@@ -76,7 +81,7 @@ def step(text = "", no = 0, max_no = 12, percentage = None):
 		log("[{:3d}%] {}".format(int((no / max_no) * 100), text), level=INFO)
 
 def substep(text = ""):
-	log("       - {}".format(text), level=INFO)
+	log(" - {}".format(text), level=INFO)
  
 def copy(src, dest):
 	try:

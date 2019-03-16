@@ -41,27 +41,27 @@ class Task:
 
 			uploader.connect()
 
-			utils.step("Show update screen on {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
+			utils.log("Show update screen on {}".format(target["hostname"]), level=utils.INFO)
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_file(os.path.join(cfg.output_dir, "update.html"), "index.html")
 
 			try:
-				utils.step("Upload manifest to {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
+				utils.log("Upload manifest to {}".format(target["hostname"]), level=utils.INFO)
 				uploader.connect()
 				uploader.chdir(target["rootdir_manifest"])
 				uploader.upload_file(os.path.join(cfg.output_dir, "manifest.json"), "manifest.json")
 			except:
-				utils.step("Manifest upload failed", percentage = self.data["current_step_percentage"])
+				utils.log("Manifest upload failed", level=utils.INFO)
 
-			utils.step("Upload app build {} to {}".format(cfg.version, target["hostname"]), percentage = self.data["current_step_percentage"])
+			utils.log("Upload app build {} to {}".format(cfg.version, target["hostname"]), level=utils.INFO)
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_dir(cfg.output_dir, target["rootdir_app"])
 
-			utils.step("Hide update screen on {}".format(target["hostname"]), percentage = self.data["current_step_percentage"])
+			utils.log("Hide update screen on {}".format(target["hostname"]), level=utils.INFO)
 			uploader.chdir(target["rootdir_app"])
 			uploader.upload_file(os.path.join(cfg.output_dir, "index.html"), "index.html")
 
-			utils.step("TODO: Notify clients about new version", percentage = self.data["current_step_percentage"])
+			utils.log("TODO: Notify clients about new version", level=utils.INFO)
 
 		return True
 

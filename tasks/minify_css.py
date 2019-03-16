@@ -16,7 +16,7 @@ class Task:
 		utils = self.utils
 		cfg = self.cfg
 
-		utils.step("Minify CSS files", percentage = self.data["current_step_percentage"])
+		utils.log("Minify CSS files", level=utils.INFO)
 		css_input = ""
 		css_count = 0
 
