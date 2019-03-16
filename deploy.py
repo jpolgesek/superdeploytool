@@ -23,7 +23,7 @@ try:
 		user_data = json.load(f)
 	utils.log("Loaded .user.json", level = utils.INFO)
 except:
-	utils.log("Loaded .user.json", level = utils.INFO)
+	utils.log("Failed to load .user.json", level = utils.INFO)
 
 
 if args.path == None:
