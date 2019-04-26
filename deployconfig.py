@@ -28,6 +28,7 @@ class DeployConfig:
 		self.output_dir = self._gen_path(data["output_dir"])
 		self.source_css = self._gen_path(data["source_css"])
 		self.source_html = self._gen_path(data["source_html"])
+		self.raw_source_html = data["source_html"]
 		self.static_dirs = data["static_dirs"]
 		self.static_files = data["static_files"]
 		self.hash_this = data["hash_this"]
