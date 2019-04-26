@@ -43,7 +43,7 @@ class Task:
 
 			utils.log("Show update screen on {}".format(target["hostname"]), level=utils.INFO)
 			uploader.chdir(target["rootdir_app"])
-			uploader.upload_file(os.path.join(cfg.output_dir, "update.html"), "index.html")
+			uploader.upload_file(os.path.join(cfg.output_dir, "update.html"), self.cfg.raw_source_html)
 
 			try:
 				utils.log("Upload manifest to {}".format(target["hostname"]), level=utils.INFO)
@@ -59,7 +59,7 @@ class Task:
 
 			utils.log("Hide update screen on {}".format(target["hostname"]), level=utils.INFO)
 			uploader.chdir(target["rootdir_app"])
-			uploader.upload_file(os.path.join(cfg.output_dir, "index.html"), "index.html")
+			uploader.upload_file(os.path.join(cfg.output_dir, self.cfg.raw_source_html), self.cfg.raw_source_html)
 
 			utils.log("TODO: Notify clients about new version", level=utils.INFO)
 
