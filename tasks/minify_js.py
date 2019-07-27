@@ -48,8 +48,8 @@ class Task:
 
 		#TODO: date
 		js_compressed = "var ZSEILPLAN_BUILD = '{0}'; //Build {0} by superdeploytool.py (NEW) \n".format(cfg.version)
-		#js_compressed += jsmin(parser.output)
-		js_compressed += parser.output
+		js_compressed += jsmin(parser.output, quote_chars="'\"`")
+		#js_compressed += parser.output
 
 		utils.substep("Before:\t {} kB in {} files ({} lines)".format(len(parser.output)//1024, parser.count, parser.output.count("\n")))
 		utils.substep("After: \t {} kB in 1 file ({} lines)".format(len(js_compressed)//1024, js_compressed.count("\n")+1))
