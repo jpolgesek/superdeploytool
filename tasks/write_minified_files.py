@@ -50,6 +50,10 @@ class Task:
 			if not target["dev"]: 
 				replaced = replaced.replace("<!--%DEV_ONLY_START%-->", "<!--%DEV_ONLY_START% ")
 				replaced = replaced.replace("<!--%DEV_ONLY_STOP%-->", " %DEV_ONLY_START% ")
+			
+			replaced = replaced.replace("%build%", cfg.version)
+			replaced = replaced.replace("%ver%", cfg.version)
+
 			replaced = htmlmin.minify(replaced, remove_empty_space=True, remove_comments=True)
 			f.seek(0)
 			f.write(replaced)
