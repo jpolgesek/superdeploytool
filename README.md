@@ -49,6 +49,12 @@ Unified tool to deploy apps from "Super Clever" family
 
 ```
 
+## Deployment environment preparation
+1. Install Python 3:  
+   `sudo apt install python3`
+2. Install required libraries:  
+   `python3 -m pip install -r req.txt` 
+
 ## Deployment
 **Profiles defined in .user.json in SDT directory**  
 `python3 deploy.py zseilplan prod`  
