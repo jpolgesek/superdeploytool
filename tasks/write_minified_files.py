@@ -30,15 +30,15 @@ class Task:
 		css_path.parent.mkdir(parents=True, exist_ok=True)
 
 
-		with open(js_path, "w", encoding="UTF-8") as f:
+		with open(str(js_path), "w", encoding="UTF-8") as f:
 			f.write(self.data["js_compressed"])
 			utils.substep("Saved compiled JavaScript to {}".format(js_path))
 
-		with open(css_path, "w", encoding="UTF-8") as f:
+		with open(str(css_path), "w", encoding="UTF-8") as f:
 			f.write(self.data["css_compressed"])
 			utils.substep("Saved compiled CSS to {}".format(css_path))
 
-		with open(os.path.join(cfg.output_dir, cfg.source_html), "r+", encoding="UTF-8") as f:
+		with open(os.path.join(str(cfg.output_dir), str(cfg.source_html)), "r+", encoding="UTF-8") as f:
 				
 			if 'ie_build' in self.data and self.data['ie_build'] != None:
 				replaced = re.sub(r"(<!-- %compile_css_start%-->)([\s\S]*)(<!-- %compile_css_end%-->)", "<link rel='stylesheet' href='assets/ie_css/c_style.css?ver={}'>".format(cfg.version), f.read())
