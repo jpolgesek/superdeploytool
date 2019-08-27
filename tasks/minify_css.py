@@ -28,7 +28,10 @@ class Task:
 
 				try:
 					filename = re.search(r'''(@import url\(")(.*)("\);)''', line)[2]
-					path = os.path.join(cfg.source_dir, "assets", "css", filename)
+					if 'ie_build' in self.data and self.data['ie_build'] != None:
+						path = os.path.join(cfg.source_dir, "assets", "ie_css", filename)
+					else:
+						path = os.path.join(cfg.source_dir, "assets", "css", filename)
 
 					with open(path, "r", encoding="UTF-8") as src:
 						css_input += src.read() + "\n"
