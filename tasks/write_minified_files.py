@@ -51,6 +51,9 @@ class Task:
 				replaced = replaced.replace("<!--%DEV_ONLY_START%-->", "<!--%DEV_ONLY_START% ")
 				replaced = replaced.replace("<!--%DEV_ONLY_STOP%-->", " %DEV_ONLY_START% ")
 			
+			replaced = replaced.replace("<!--%DEPLOYTOOL_ENABLE_START%", "")
+			replaced = replaced.replace("%DEPLOYTOOL_ENABLE_END%-->", "")
+			
 			replaced = replaced.replace("%build%", cfg.version)
 			replaced = replaced.replace("%ver%", cfg.version)
 
